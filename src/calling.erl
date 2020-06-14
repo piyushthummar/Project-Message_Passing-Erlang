@@ -10,17 +10,14 @@
 -author("PIYUSH").
 
 %% API
--export([messagePassing/3]).
+-export([messagePassing/3,caller/2]).
 messagePassing(Sender, Receivers, Master_Process_Id) ->
-  iterateList(Sender, Receivers, self()),
-  caller(Master_Process_Id, Sender).
-
-iterateList(Sender, Receivers, Process_ID) ->
+%%  iterateList(Sender, Receivers, self()),
+  Process_ID = self(),
   lists:foreach(fun(Record) ->
-    register(Sender, Process_ID),
-    {_,_,MicroSecond} = erlang:now(),
-    Process_ID ! {request, Sender, Record, Process_ID, MicroSecond}
-                end, Receivers).
+    Process_ID ! {request, Sender, Record, Process_ID, element(3, now())}
+                end, Receivers),
+  caller(Master_Process_Id, Sender).
 
 caller(Master_Process_Id, Sender_Name) ->
   receive
@@ -35,5 +32,5 @@ caller(Master_Process_Id, Sender_Name) ->
 
   after
     5000 ->
-      io:format("Process ~w has received no calls for 5 seconds, ending...", [Sender_Name])
+      io:format("~n Process ~w has received no calls for 5 seconds, ending... ~n", [Sender_Name])
   end, caller(Master_Process_Id, Sender_Name).
