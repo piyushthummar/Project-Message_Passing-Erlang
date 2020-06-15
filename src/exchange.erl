@@ -18,6 +18,7 @@ start() ->
                 Master_Process_id = self(),
                 List_of_Data = maps:from_list(CallsData),
                 [io:format("~w: ~w ~n",[Sender,List_of_Receivers]) || {Sender, List_of_Receivers} <- CallsData],
+                io:format("~n",[]),
                 lists:foreach(fun(Record) ->
                                             {Sender,Receivers} = Record,
                                             Process_ID = spawn(calling, messagePassing, [Sender,Receivers,Master_Process_id])
@@ -35,12 +36,12 @@ start() ->
 print_Conversation_Message(Master_Process_id) ->
   receive
     {intro_Message, Sender, Receiver, Timestamp} ->
-      io:fwrite("~p received intro message from ~p [~p] ~n",[Sender, Receiver, Timestamp]),
+      io:fwrite("~p received intro message from ~p [~p] ~n",[Receiver, Sender, Timestamp]),
       print_Conversation_Message(Master_Process_id); %%Counter+1
     {reply_Message, Sender, Receiver, Timestamp} ->
       io:fwrite("~p received reply message from ~p [~p] ~n",[Sender, Receiver, Timestamp]),
       print_Conversation_Message(Master_Process_id) %%Counter+1
   after
     10000 ->
-      io:fwrite("~n Master has received no replies for 10 seconds, ending...~n",[])
+      io:fwrite("~nMaster has received no replies for 10 seconds, ending...~n",[])
   end.
