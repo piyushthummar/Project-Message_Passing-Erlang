@@ -32,5 +32,6 @@ caller(Master_Process_Id, Sender_Name) ->
 
   after
     5000 ->
-      io:format("~nProcess ~w has received no calls for 5 seconds, ending... ~n", [Sender_Name])
+      io:format("~nProcess ~w has received no calls for 5 seconds, ending... ~n", [Sender_Name]),
+      exit(normal)
   end, caller(Master_Process_Id, Sender_Name).
