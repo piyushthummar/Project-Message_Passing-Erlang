@@ -11,6 +11,8 @@
 
 %% API
 -export([start/0, print_Conversation_Message/1]).
+
+%% This is the main method that will be executed first to run this application
 start() ->
 %%              (Reference: https://sites.google.com/site/gettingalongwitherlang/home/file-i-o/file-consult)
                 {Data, CallsData} = file:consult("src/calls.txt"),
@@ -32,7 +34,7 @@ start() ->
             print_Conversation_Message(Master_Process_id).
 %%            io:fwrite("Done!!",[]). %% 0
 
-%% Print Initial and Reply message...
+%% This is the method used to Print Initial and Reply message...
 print_Conversation_Message(Master_Process_id) ->
   receive
     {intro_Message, Sender, Receiver, Timestamp} ->

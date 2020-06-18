@@ -11,6 +11,8 @@
 
 %% API
 -export([messagePassing/3,caller/2]).
+
+%% This is the method that is invoked by the main exchange class to create and execute processes...
 messagePassing(Sender, Receivers, Master_Process_Id) ->
 %%  iterateList(Sender, Receivers, self()),
   Process_ID = self(),
@@ -19,6 +21,7 @@ messagePassing(Sender, Receivers, Master_Process_Id) ->
                 end, Receivers),
   caller(Master_Process_Id, Sender).
 
+%% This is the method to send back the messages to master process....
 caller(Master_Process_Id, Sender_Name) ->
   receive
     {request, Sender, Current_Receiver, Process_ID, MicroSecond} ->
